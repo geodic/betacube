@@ -18,8 +18,8 @@ pub struct TrainConfig {
     epoch_mult: usize,
     #[config(default = 64)]
     pub batch_size: usize,
-    #[config(default = 100.0)]
-    pub target_accuracy: f64,
+    #[config(default = 1.5)]
+    pub target_accuracy_decay: f64,
     #[config(default = 5)]
     pub accuracy_consistency: usize,
     #[config(default = 42)]
@@ -79,6 +79,7 @@ pub fn train<B: AutodiffBackend>(device: &B::Device, config: &TrainConfig) -> Re
         println!("Training for {} moves", target_moves);
         for scramble_moves in 1..=target_moves {
             println!("Training with {} scramble moves", scramble_moves);
+            let target_accuracy = 100.0 - config.target_accuracy_decay * scramble_moves as f64;
 
             let mut dataset = Data::new(device, config.batch_size, scramble_moves);
 
@@ -125,7 +126,7 @@ pub fn train<B: AutodiffBackend>(device: &B::Device, config: &TrainConfig) -> Re
                     );
                 }
 
-                if accuracy >= config.target_accuracy {
+                if accuracy >= target_accuracy {
                     consistent_accuracy += 1;
                 } else {
                     consistent_accuracy = 0;
