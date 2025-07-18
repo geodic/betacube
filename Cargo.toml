@@ -1,0 +1,14 @@
+[package]
+name = "betacube"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cubesim = "0.0.7"
+kociemba = { git = "https://github.com/geodic/kociemba" }
+anyhow = "1.0.98"
+rand = "0.9.1"
+burn = { version = "0.17.1", features = ["train", "wgpu"] }
+itertools = "0.14.0"
+ratatui = "0.29.0"
+
