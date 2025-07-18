@@ -20,6 +20,8 @@ pub struct TrainConfig {
     pub batch_size: usize,
     #[config(default = 98.0)]
     pub target_accuracy: f64,
+    #[config(default = 5)]
+    pub accuracy_consistency: usize,
     #[config(default = 42)]
     pub seed: u64,
     #[config(default = 1e-4)]
@@ -101,6 +103,7 @@ pub fn train<B: AutodiffBackend>(device: &B::Device, config: &TrainConfig) -> Re
 
             println!("Starting training loop...");
             let mut iteration = 0;
+            let mut consistent_accuracy = 0;
             loop {
                 let batch = dataset
                     .next()
@@ -123,9 +126,15 @@ pub fn train<B: AutodiffBackend>(device: &B::Device, config: &TrainConfig) -> Re
                 }
 
                 if accuracy >= config.target_accuracy {
+                    consistent_accuracy += 1;
+                } else {
+                    consistent_accuracy = 0;
+                }
+
+                if consistent_accuracy >= config.accuracy_consistency {
                     println!(
-                        "Achieved target accuracy of {:.2}% with {} moves",
-                        accuracy, scramble_moves
+                        "Achieved target accuracy of {:.2}% with consistency of {} and {} moves",
+                        accuracy, consistent_accuracy, scramble_moves
                     );
                     break;
                 } else {
