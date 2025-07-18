@@ -31,3 +31,6 @@ tables
 # Nix
 .direnv
 .devenv
+
+# Models
+model_*.mpk

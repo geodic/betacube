@@ -4,6 +4,7 @@ use anyhow::Result;
 use burn::nn::loss::CrossEntropyLossConfig;
 use burn::optim::adaptor::OptimizerAdaptor;
 use burn::optim::{Adam, GradientsParams};
+use burn::record::{FullPrecisionSettings, NamedMpkFileRecorder};
 use burn::{
     optim::{AdamConfig, Optimizer},
     prelude::*,
@@ -71,6 +72,7 @@ fn train_batch<B: AutodiffBackend>(
 
 pub fn train<B: AutodiffBackend>(device: &B::Device, config: &TrainConfig) -> Result<()> {
     let mut model = RubiksModel::<B>::new(device);
+    let recorder = NamedMpkFileRecorder::<FullPrecisionSettings>::new();
     let mut optimizer = AdamConfig::new().init();
 
     B::seed(config.seed);
@@ -146,6 +148,9 @@ pub fn train<B: AutodiffBackend>(device: &B::Device, config: &TrainConfig) -> Re
                 }
             }
         }
+        println!("Saving model for {} moves", target_moves);
+        let model_path = format!("model_{}moves.mpk", target_moves);
+        model.clone().save_file(&model_path, &recorder)?;
     }
 
     Ok(())
