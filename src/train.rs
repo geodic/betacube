@@ -18,7 +18,7 @@ pub struct TrainConfig {
     epoch_mult: usize,
     #[config(default = 64)]
     pub batch_size: usize,
-    #[config(default = 98.0)]
+    #[config(default = 100.0)]
     pub target_accuracy: f64,
     #[config(default = 5)]
     pub accuracy_consistency: usize,
