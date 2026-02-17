@@ -1,0 +1,15 @@
+[package]
+name = "betacube"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+burn = { version = "0.20.1", features = [
+    "wgpu",
+    "dataset",
+    "train",
+    "ndarray",
+] }
+cubesim = "0.0.7"
+erno = { git = "https://github.com/geodic/erno", version = "0.1.0" }
+rand = "0.10.0"
