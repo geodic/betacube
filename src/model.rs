@@ -1,4 +1,4 @@
-use crate::cube::{cube_to_tensor, get_adjacency_matrix};
+use crate::cube::get_adjacency_matrix;
 use crate::gnn::{GCNConv, GCNConvConfig, NormalizationAlg, normalize_adj};
 use burn::{
     config::Config,
@@ -6,7 +6,6 @@ use burn::{
     nn::{Linear, LinearConfig, Relu},
     tensor::{Tensor, backend::Backend},
 };
-use erno::Cube;
 
 #[derive(Clone, Debug)]
 pub struct Prediction<B: Backend> {
